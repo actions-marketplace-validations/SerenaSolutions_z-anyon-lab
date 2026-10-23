@@ -1,5 +1,5 @@
 name: 'Z-Anyon Lab'
-description: 'Run the non-Abelian anyon braid battery (S3 qutrit) in CI — sealed Z-QEA receipt, nothing silent.'
+description: 'Run the non-Abelian anyon braid battery (S3 qutrit) in CI — GHZ device gate, sealed Z-QEA receipt.'
 author: 'Serena Quantum Solutions'
 branding:
   icon: 'zap'

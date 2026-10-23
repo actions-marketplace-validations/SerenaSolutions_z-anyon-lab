@@ -39,3 +39,8 @@ Palavras de trançado S3 `(B_R B_S)²` vs `(B_S B_R)²` divergem no hardware (01
 Recibo selado: [`poc/receipt_anyon_hw.json`](poc/receipt_anyon_hw.json) — verificável com `python3 zqea_verify.py poc/receipt_anyon_hw.json --strict-pq`.
 
 Bateria completa do confronto multilíngue (OpenQASM 3, Qiskit, Cirq, PennyLane, Braket, Q#): [SerenaSolutions/quantum-poc](https://github.com/SerenaSolutions/quantum-poc).
+
+## Changelog
+
+### v1.1.0 (2026-10-23)
+- Porta de integridade GHZ (ZYQL v1.9.0) antes da bateria de trançados: o dispositivo é testado em coerência antes de qualquer veredito; resultado registrado no recibo (`device_gate_ghz`).

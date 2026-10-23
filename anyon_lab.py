@@ -21,6 +21,17 @@ B_R = np.array([[0, 0, 1], [0, 1, 0], [-1, 0, 0]], dtype=float)  # braid in plan
 B_S = np.array([[1, 0, 0], [0, 0, 1], [0, -1, 0]], dtype=float)  # braid in plane (1,2)
 K_MAX = 6
 
+def device_gate(n=3, shots=1024, seed=1701):
+    """v1.9.0 — porta de integridade GHZ (kernel ZYQL v1.9.0): o e confiado
+    o dispositivo antes de qualquer veredito de trançado."""
+    try:
+        from zyql_quantum_gate import ghz_integrity
+        return ghz_integrity(n=n, shots=shots, seed=seed)
+    except ImportError:
+        return {"fidelity_ghz": None, "threshold": 0.80,
+                "device_trusted": None, "mode": "GHZ_UNAVAILABLE (kernel ZYQL nao instalado; declarado)"}
+
+
 def battery():
     comm = B_R @ B_S - B_S @ B_R
     comm_l1 = int(np.abs(comm).sum())
@@ -48,8 +59,10 @@ def battery():
 
 def main():
     out = sys.argv[1] if len(sys.argv) > 1 else "anyon_receipt.json"
+    gate = device_gate()
     r = battery()
     rec = {"spec": "Z-QEA", "modulo": "anyon_lab.py (SerenaSolutions/z-anyon-lab)",
+           "device_gate_ghz": gate,
            "data": datetime.datetime.now().astimezone().isoformat(timespec="seconds"),
            "modo": "SIMULACAO STATEVECTOR LOCAL (numpy, aritmetica exata) — sem hardware, sem shots, sem endosso",
            "model": "S3 qutrit miniature (fusion space dim 3, |11> vetoed) — declarado: nao e o duplo quantico completo",
@@ -57,6 +70,7 @@ def main():
            "selo_regra": "selo = SHA3-256 sobre json.dumps(recibo, sort_keys=True, ensure_ascii=True, default=str) com o campo selo_sha3_256 REMOVIDO da entrada"}
     rec["selo_sha3_256"] = seal(rec)
     json.dump(rec, open(out, "w"), ensure_ascii=True, indent=1)
+    print("GHZ gate:", gate.get("fidelity_ghz"), "->", gate.get("device_trusted"))
     print("Z-ANYON LAB:", r["verdict"], "| commutator L1 =", r["commutator_L1"], "| selo:", rec["selo_sha3_256"][:16] + "...")
     if "GITHUB_OUTPUT" in os.environ:
         with open(os.environ["GITHUB_OUTPUT"], "a") as f:
